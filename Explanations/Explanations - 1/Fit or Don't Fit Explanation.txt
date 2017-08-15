@@ -1,0 +1,26 @@
+
+
+----------------------------------------------------
+
+Find the number of digits in b. Let it be f. 
+To get the last f digits of a, find a%(10^f).
+
+--------------------------
+
+int main()
+{
+    int no_of_test_cases;
+    scanf("%d", &no_of_test_cases);
+
+    while(no_of_test_cases--)
+    {
+        int a, b;
+        scanf("%d %d", &a, &b);
+
+        int no_of_digits_in_b = find_no_of_digits_in(b);
+        int final_digits_of_a = a%power(10, no_of_digits_in_b);
+
+        printf(final_digits_of_a == b ? "encaixa\n" : "nao encaixa\n");
+    }
+    return 0;
+}
