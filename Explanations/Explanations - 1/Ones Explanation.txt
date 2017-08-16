@@ -1,0 +1,102 @@
+Given any integer n [1, 10000] not divisible by 2  or 5, some multiple of n is a number which in decimal notation is a sequence of 1\'s. 
+How many digits are in the smallest such a multiple of n?
+
+--------------------------------------------------
+
+This problem was beautiful !
+
+Firstly, a proof of the assertion that any number co prime to 2 and 5 neccissarily has a multiple consisting of all 1s. 
+
+Let us write down the series of numbers - 
+
+1, 11, 111, 1111, .... , 111... 1 (n times).
+
+If any of these numbers are a multiple of n, we are done. 
+
+Let's say none of these numbers are a multiple of n. We have chosen n numbers, so by the Pigeonhole Principle, two of them must have the same remainder modulo n.
+(There are only n possible remainders - {0, 1, ... , n-1})
+
+Let us choose these two numbers. 
+
+111... 1 (i times) = 11... 1 (j times) (modulo n).
+
+That means - 11111...1 (i times) - 111...1 (j times) is a multiple of n.
+
+n | 11 ... 1 0000 , (i-j 1s and j 0s)
+n | 11... 1 2^j 5^j,
+
+but, n is coprime to 2 and 5. 
+
+This means n must divide 11....1 (i - j times). This contradicts the assumption we made that there is no multiple of n among these n numbers.
+
+-------------------------------
+
+Now, this is just an existence proof. How to practically find the smallest such number ?
+We may use brute force and keep trying out every number. We are guaranteed to make at most n tries. 
+
+However, generating the number is not possible because the long data type can hold only 18 digits. 
+
+We need to think of a number as a polynomial.
+
+p = x^n + x^{n - 1} + x^{n - 2} + ... + x + 1
+
+This polynomial must be determined modulo n.
+
+A number consisting of all 1s is = 1 + 10 + 10^2 + 10^3 + 10^4 + 10^5 + ... + 10^n
+
+To ensure, we never exceed the size of a 32 bit type, we evaluate 10^i (mod n) for each i using binary exponentiation. 
+
+
+So, we find (10^0)%n + (10^1)%n + (10^2)%n + (10^3)%n + ... + (10^n)%n.
+
+This way we are always adding numbers that are smaller than the size of 32 bit register.
+
+We stop whenever we get 0.
+
+
+------------------------------------------
+
+This is at most O(n log n) ... We need at most n iterations, and we find 10^i, in O(log i) time for each i.
+
+------------------------------------------------
+
+#include <cstdio>
+
+int power_mod(int x, int power, int MOD)
+{
+    int y = x;
+    int result = 1;
+
+    while(power > 0)
+    {
+        if(power%2 == 1)
+            result = (result*1LL*y)%MOD;
+
+        y = (y*1LL*y)%MOD;
+
+        power = power >> 1;
+    }
+    return result;
+}
+
+int main()
+{
+    int n;
+    while(scanf("%d", &n) != EOF)
+    {
+        int no_of_1s = 0, number = 0;
+        do
+        {
+            int current_1_value = power_mod(10, no_of_1s, n);
+            number = (number + current_1_value)%n;
+
+            no_of_1s++;
+
+        }while(number%n != 0);
+
+        printf("%d\n", no_of_1s);
+    }
+
+    return 0;
+}
+
