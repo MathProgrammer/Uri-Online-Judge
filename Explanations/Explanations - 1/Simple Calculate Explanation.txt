@@ -1,0 +1,20 @@
+In this problem, the task is to read a code of a product 1, the number of units of product 1, the price for one unit of product 1, the code of a product 2, 
+the number of units of product 2 and the price for one unit of product 2. 
+After this, calculate and show the amount to be paid.
+
+-------------------------------------------------
+
+#include <cstdio>
+
+int main()
+{
+    int code_1, code_2, quantity_1, quantity_2;
+    double price_1, price_2;
+    scanf("%d %d %lf", &code_1, &quantity_1, &price_1);
+    scanf("%d %d %lf", &code_2, &quantity_2, &price_2);
+
+    double amount = quantity_1*price_1 + quantity_2*price_2;
+    printf("VALOR A PAGAR: R$ %.2lf\n", amount);
+
+    return 0;
+}
